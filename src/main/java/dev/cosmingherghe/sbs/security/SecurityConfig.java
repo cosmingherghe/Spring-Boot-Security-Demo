@@ -20,4 +20,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser("user").password("user").roles("USER");
     }
 
+    //Method to authorise requests
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
+    }
 }
