@@ -18,12 +18,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder managerBuilder) throws Exception {
         String adminPasswd = passwordEncoder().encode("admin");
         String userPasswd = passwordEncoder().encode("user");
+        String managerPasswd = passwordEncoder().encode("manager");
 
         managerBuilder
                 .inMemoryAuthentication()
+                .withUser("user").password(userPasswd).roles("USER")
+                .and()
                 .withUser("admin").password(adminPasswd).roles("ADMIN")
                 .and()
-                .withUser("user").password(userPasswd).roles("USER");
+                .withUser("manager").password(managerPasswd).roles("MANAGER");
     }
 
     //Method to authorise requests
@@ -31,7 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeRequests()
-                .anyRequest().authenticated()
+                .antMatchers("/").permitAll()
+                .antMatchers("/profile/").authenticated()
+                .antMatchers("/admin/").hasRole("ADMIN")
+                .antMatchers("/management/").hasAnyRole("ADMIN", "MANAGER")
                 .and()
                 .httpBasic();
     }
