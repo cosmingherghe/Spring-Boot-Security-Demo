@@ -25,8 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser("user").password(userPasswd).roles("USER")
                 .and()
                 .withUser("admin").password(adminPasswd).roles("ADMIN")
+                    .authorities("ACCESS_TEST1", "ACCESS_TEST2")
                 .and()
-                .withUser("manager").password(managerPasswd).roles("MANAGER");
+                .withUser("manager").password(managerPasswd).roles("MANAGER")
+                    .authorities("ACCESS_TEST1");
     }
 
     //Method to authorise requests
@@ -38,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/profile/**").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/management/**").hasAnyRole("ADMIN", "MANAGER")
-                .antMatchers("/api/public/**").authenticated()
+                .antMatchers("/api/public/test1").hasAuthority("ACCESS_TEST1")
+                .antMatchers("/api/public/test2").hasAuthority("ACCESS_TEST2")
                 .and()
                 .httpBasic();
     }
