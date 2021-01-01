@@ -1,7 +1,9 @@
 package dev.cosmingherghe.sbs.security;
 
+import dev.cosmingherghe.sbs.services.UserPrincipalDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,22 +15,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private UserPrincipalDetailsService userPrincipalDetailsService;
+
+    public SecurityConfig(UserPrincipalDetailsService userPrincipalDetailsService) {
+        this.userPrincipalDetailsService = userPrincipalDetailsService;
+    }
+
     //Method that defines data base for users
     @Override
     protected void configure(AuthenticationManagerBuilder managerBuilder) throws Exception {
-        String adminPasswd = passwordEncoder().encode("admin");
-        String userPasswd = passwordEncoder().encode("user");
-        String managerPasswd = passwordEncoder().encode("manager");
 
-        managerBuilder
-                .inMemoryAuthentication()
-                .withUser("user").password(userPasswd).roles("USER")
-                .and()
-                .withUser("admin").password(adminPasswd)
-                    .authorities("ACCESS_TEST1", "ACCESS_TEST2", "ROLE_ADMIN")
-                .and()
-                .withUser("manager").password(managerPasswd)
-                    .authorities("ACCESS_TEST1","ROLE_MANAGER");
+        managerBuilder.authenticationProvider(daoAuthenticationProvider());
     }
 
     //Method to authorise requests
@@ -45,6 +42,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/public/users").hasRole("ADMIN")
                 .and()
                 .httpBasic();
+    }
+
+    @Bean
+    DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(this.userPrincipalDetailsService);
+
+        return daoAuthenticationProvider;
     }
 
     //Use password encoder to
