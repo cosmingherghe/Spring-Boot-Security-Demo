@@ -1,6 +1,5 @@
 package dev.cosmingherghe.sbs.security;
 
-import dev.cosmingherghe.sbs.services.UserPrincipalDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;

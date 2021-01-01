@@ -1,4 +1,4 @@
-package dev.cosmingherghe.sbs.services;
+package dev.cosmingherghe.sbs.security;
 
 import dev.cosmingherghe.sbs.db.UserRepository;
 import dev.cosmingherghe.sbs.entities.User;
