@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:insert="fragments.html :: headerfiles">
+<head th:insert="layouts/fragments.html :: headerfiles">
     <title>Log in</title>
 </head>
 <body>
@@ -10,7 +10,7 @@
                 <i class="fa fa-user"></i> Please Login
             </div>
             <div class="card-block" style="padding: 24px;">
-                <form name="f" th:action="@{/signin}" method="post">
+                <form name="f" th:action="@{/login}" method="post">
                     <fieldset>
                         <!-- Thymeleaf + Spring Security error display -->
                         <div th:if="${param.error}" class="alert alert-danger">
@@ -23,13 +23,13 @@
 
                         <!-- Login Controls -->
                         <div class="form-group">
-                            <label for="txtUsername">Username</label>
+                            <label for="username">Username</label>
                             <input type="text" class="form-control" id="username" name="username"
                                    placeholder="Username">
                         </div>
 
                         <div class="form-group">
-                            <label for="txtPassword">Password</label>
+                            <label for="password">Password</label>
                             <input type="password" class="form-control" id="password" name="password"
                                    placeholder="Password">
                         </div>
